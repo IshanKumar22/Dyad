@@ -1,2 +1,2 @@
-# Luna
-A virtual assistant named Luna.
+# Nova
+A virtual assistant named Nova.
