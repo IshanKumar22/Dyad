@@ -27,31 +27,31 @@ def generate_completion(messages: list[dict[str: str, str: str],]) -> str:
             model=g4f.Model.gpt_4, provider=g4f.Provider.Bing, messages=messages)
         if response == "":
             raise Exception("Response is empty")
-    except Exception:
+    except:
         try:
             response = g4f.ChatCompletion.create(
                 model=g4f.Model.gpt_4, provider=g4f.Provider.Lockchat, messages=messages)
             if response == "":
                 raise Exception("Response is empty")
-        except Exception:
+        except:
             try:
                 response = g4f.ChatCompletion.create(
                     model=g4f.Model.palm, provider=g4f.Provider.Bard, messages=messages)
                 if response == "":
                     raise Exception("Response is empty")
-            except Exception:
+            except:
                 try:
                     response = g4f.ChatCompletion.create(
                         model=g4f.Model.falcon_40b, provider=g4f.Provider.H2o, messages=messages)
                     if response == "":
                         raise Exception("Response is empty")
-                except Exception:
+                except:
                     try:
                         response = g4f.ChatCompletion.create(
                             model=g4f.Model.falcon_7b, provider=g4f.Provider.H2o, messages=messages)
                         if response == "":
                             raise Exception("Response is empty")
-                    except Exception:
+                    except:
                         response = g4f.ChatCompletion.create(
                             model=g4f.Model.llama_13b, provider=g4f.Provider.H2o, messages=messages)
 

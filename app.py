@@ -4,7 +4,7 @@ from flask_socketio import SocketIO, join_room, leave_room
 from assistant import Assistant
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'DyadChurchlessTech'
+app.config['SECRET_KEY'] = 'DyadGPT4Free'
 socketio = SocketIO(app)
 
 assistants = {}
