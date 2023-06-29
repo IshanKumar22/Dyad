@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chat Interface</title>
+        <script src="https://unpkg.com/socket.io-client@latest/dist/socket.io.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    </head>
+    <body>
+        <div id="chat-window"></div>
+        <div id="user-input">
+            <input
+                type="text"
+                id="user-message"
+                placeholder="Type your message here..."
+                autocomplete="off"
+            />
+            <button onclick="send()">Send</button>
+        </div>
+        <script type="text/javascript">
+            var send = null;
+            $(document).ready(function () {
+                var socket = io.connect(location.href);
+                var messages = $("div#chat-window");
+
+                function addMessage(role, message) {
+                    var messageBody = $("<message/>");
+                    var image = $(
+                        '<roleImg class="' + role.toLowerCase() + '"/>'
+                    );
+                    var content = $("<content/>");
+                    var roleBody = $("<role/>").text(role);
+                    var text = $("<text/>");
+                    var lines = message.split("\n");
+                    text.append(lines[0]);
+                    lines.slice(1).forEach((line) => {
+                        text.append($("<br/>"));
+                        text.append(line);
+                    });
+                    content.append(roleBody, text);
+                    messageBody.append(image, content);
+                    messages.append(messageBody);
+                    messages.append($("<br class='break'/>"));
+                }
+
+                socket.on("connect", function () {
+                    console.log("Connected to server");
+                });
+
+                socket.on("response", function (data) {
+                    addMessage("Dyad", data.message);
+                });
+
+                socket.on("disconnect", function () {
+                    console.log("Disconnected from server");
+                });
+
+                function _send() {
+                    var message = $("#user-message").val();
+                    addMessage("You", message);
+                    socket.send({ message: message });
+                    $("#user-message").val("");
+                }
+
+                send = _send;
+            });
+        </script>
+    </body>
+    <style>
+        html {
+            --imgSize: 50px;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            background-color: #222;
+            color: #ccc;
+        }
+        #chat-window {
+            width: 100%;
+            max-height: 90dvh;
+            min-height: 90dvh;
+            display: flex;
+            flex-direction: column;
+            overflow-y: scroll;
+            overflow-x: visible;
+            margin-bottom: 2px;
+        }
+        #user-input {
+            display: flex;
+            width: 100%;
+        }
+        #user-message {
+            width: -webkit-fill-available;
+            background: #333;
+            border-style: inset;
+            color: #bbb;
+            font-size: large;
+            height: 5dvh;
+            border-radius: 5px;
+        }
+        button {
+            background: #333;
+            border-style: outset;
+            color: #bbb;
+            font-size: large;
+            border-radius: 2px;
+        }
+        roleImg {
+            min-width: var(--imgSize);
+            min-height: var(--imgSize);
+            max-width: var(--imgSize);
+            max-height: var(--imgSize);
+            margin-right: 5px;
+        }
+        roleImg.dyad {
+            background-image: url("/static/images/dyad.svg");
+        }
+        roleImg.you {
+            background-image: url("/static/images/human.svg");
+        }
+        content {
+            display: flex;
+            flex-direction: column;
+            max-height: min-content;
+        }
+        message {
+            display: flex;
+        }
+        role,
+        text,
+        content {
+            display: block;
+        }
+        role,
+        text {
+            height: 25px;
+            font-size: 22px;
+        }
+        role {
+            font-weight: bold;
+        }
+        br {
+            line-height: 2rem;
+        }
+        text {
+            height: fit-content;
+        }
+    </style>
+</html>
