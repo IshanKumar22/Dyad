@@ -1,2 +1,2 @@
-# Nova
-A virtual assistant named Nova.
+# Dyad
+A virtual assistant named Dyad.
